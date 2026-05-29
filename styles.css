@@ -510,19 +510,29 @@ textarea {
   font-size: 0.82rem;
 }
 
+.restore-action {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 86px;
+  border: 0;
+  background: var(--moss);
+  color: #fff;
+  font-weight: 900;
+}
+
 .history-record-card {
   position: relative;
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fffdf9;
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
+  touch-action: pan-y;
+  transition: transform 180ms ease;
+  z-index: 1;
 }
 
-.history-record-card:active {
-  background: #f5ede4;
+.history-record-card.is-dragging {
+  transition: none;
 }
 
 @media (max-width: 780px) {

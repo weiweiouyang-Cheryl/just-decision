@@ -316,6 +316,7 @@ function renderHistory() {
         '<article class="record-shell history-shell" data-record-id="' +
         record.id +
         '">' +
+        '<button class="restore-action" type="button" aria-label="复原这条记录">复原</button>' +
         '<div class="record-card history-record-card">' +
         "<div><strong>" +
         record.value +
@@ -340,43 +341,47 @@ function renderHistory() {
 }
 
 function bindHistoryGestures() {
-  var shells = els.historyList.querySelectorAll(".history-shell");
-  var timer = null;
-  var touchId = null;
-
-  shells.forEach(function (shell) {
+  els.historyList.querySelectorAll(".history-shell").forEach(function (shell) {
     var card = shell.querySelector(".history-record-card");
+    var restoreButton = shell.querySelector(".restore-action");
+    var startX = 0;
+    var currentX = 0;
+    var pointerId = null;
+
+    restoreButton.addEventListener("click", function () {
+      restoreRecord(shell.dataset.recordId);
+    });
 
     card.addEventListener("pointerdown", function (event) {
-      touchId = event.pointerId;
-      card.setPointerCapture(touchId);
-      timer = setTimeout(function () {
-        restoreRecord(shell.dataset.recordId);
-        timer = null;
-      }, 800);
+      startX = event.clientX;
+      currentX = 0;
+      pointerId = event.pointerId;
+      card.setPointerCapture(pointerId);
+      card.classList.add("is-dragging");
     });
 
     card.addEventListener("pointermove", function (event) {
-      if (timer && touchId === event.pointerId) {
-        clearTimeout(timer);
-        timer = null;
-      }
+      if (pointerId !== event.pointerId) return;
+      currentX = Math.min(event.clientX - startX, 0);
+      card.style.transform = "translateX(" + Math.max(currentX, -96) + "px)";
     });
 
     card.addEventListener("pointerup", function (event) {
-      if (touchId === event.pointerId && timer) {
-        clearTimeout(timer);
-        timer = null;
+      if (pointerId !== event.pointerId) return;
+      card.releasePointerCapture(pointerId);
+      card.classList.remove("is-dragging");
+      if (currentX < -92) {
+        restoreRecord(shell.dataset.recordId);
+        return;
       }
-      touchId = null;
+      card.style.transform = "";
+      pointerId = null;
     });
 
     card.addEventListener("pointercancel", function () {
-      if (timer) {
-        clearTimeout(timer);
-        timer = null;
-      }
-      touchId = null;
+      card.classList.remove("is-dragging");
+      card.style.transform = "";
+      pointerId = null;
     });
   });
 }
