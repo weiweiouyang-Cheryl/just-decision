@@ -50,6 +50,7 @@ const els = {
 let records = loadRecords();
 let meanings = loadMeanings();
 let visibleMonth = new Date();
+let selectedDate = null;
 
 function dateKey(date) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -258,9 +259,11 @@ function renderCalendar() {
     day.setDate(start.getDate() + i);
     const key = dateKey(day);
     const dayRecords = groups[key] || [];
-    const muted = day.getMonth() !== month ? " is-muted" : "";
+    var cssClass = "calendar-day";
+    if (day.getMonth() !== month) cssClass += " is-muted";
+    if (key === selectedDate) cssClass += " is-selected";
     days.push(`
-      <div class="calendar-day${muted}" title="${key}，${dayRecords.length} 次">
+      <div class="${cssClass}" title="${key}，${dayRecords.length} 次">
         <div class="calendar-date">${day.getDate()}</div>
         <div class="calendar-results">
           ${dayRecords.slice(0, 5).map((record) => `<span class="result-chip">${record.value}</span>`).join("")}
@@ -281,15 +284,28 @@ function renderHeatmap() {
   const start = new Date(end);
   start.setDate(end.getDate() - 83);
 
-  const cells = [];
-  for (let i = 0; i < 84; i += 1) {
-    const day = new Date(start);
+  var cells = [];
+  var dates = [];
+  for (var i = 0; i < 84; i += 1) {
+    var day = new Date(start);
     day.setDate(start.getDate() + i);
-    const key = dateKey(day);
-    const count = counts[key] || 0;
-    cells.push(`<span class="heat-cell" data-level="${heatLevel(count)}" title="${key}，摇了 ${count} 次"></span>`);
+    var key = dateKey(day);
+    var count = counts[key] || 0;
+    dates.push(key);
+    cells.push('<span class="heat-cell" data-level="' + heatLevel(count) + '" data-date="' + key + '" title="' + key + '，摇了 ' + count + ' 次"></span>');
   }
   els.heatmap.innerHTML = cells.join("");
+
+  els.heatmap.querySelectorAll(".heat-cell").forEach(function (cell, index) {
+    cell.addEventListener("click", function () {
+      var dateKey_1 = dates[index];
+      selectedDate = dateKey_1;
+      var parts = dateKey_1.split("-");
+      visibleMonth = new Date(Number(parts[0]), Number(parts[1]) - 1, 1);
+      renderCalendar();
+      document.querySelector(".calendar-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
 }
 
 function heatLevel(count) {

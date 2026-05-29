@@ -49,8 +49,7 @@ button {
 
 .hero-panel,
 .today-panel,
-.calendar-panel,
-.heatmap-panel {
+.calendar-panel {
   background: rgba(255, 250, 245, 0.9);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -59,13 +58,15 @@ button {
 
 .hero-panel,
 .today-panel,
-.calendar-panel,
-.heatmap-panel {
+.calendar-panel {
   padding: 24px;
 }
 
-.calendar-panel,
-.heatmap-panel {
+.calendar-panel {
+  grid-column: 1 / -1;
+}
+
+.hero-panel {
   grid-column: 1 / -1;
 }
 
@@ -127,11 +128,50 @@ h2 {
   line-height: 1;
 }
 
+.hero-body {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .dice-stage {
   display: grid;
   place-items: center;
   min-height: 310px;
   text-align: center;
+  flex: 1;
+  min-width: 260px;
+}
+
+.heatmap-mini {
+  flex: 1;
+  min-width: 260px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffdf9;
+}
+
+.heatmap-mini-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.heatmap-mini-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, 12px);
+  gap: 4px;
+  width: max-content;
+  min-width: 100%;
+  overflow: hidden;
 }
 
 .dice {
@@ -326,6 +366,12 @@ h2 {
   opacity: 0.45;
 }
 
+.calendar-day.is-selected {
+  border-color: var(--clay);
+  background: #faf0e8;
+  box-shadow: inset 0 0 0 2px var(--clay);
+}
+
 .calendar-date {
   color: var(--muted);
   font-size: 0.82rem;
@@ -351,26 +397,22 @@ h2 {
   font-weight: 900;
 }
 
-.heatmap-wrap {
-  margin-top: 18px;
-  overflow-x: auto;
-}
-
-.heatmap {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(7, 14px);
-  gap: 5px;
-  width: max-content;
-  min-width: 100%;
-}
-
 .heat-cell,
 .heatmap-legend i {
-  width: 14px;
-  height: 14px;
-  border-radius: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
   background: #eee3dc;
+  cursor: pointer;
+  transition: transform 120ms ease;
+}
+
+.heat-cell:hover {
+  transform: scale(1.5);
+  outline: 2px solid var(--clay);
+  outline-offset: 1px;
+  z-index: 1;
+  position: relative;
 }
 
 [data-level="1"] {
@@ -541,8 +583,21 @@ textarea {
     padding: 16px;
   }
 
-  .calendar-panel,
-  .heatmap-panel {
+  .hero-body {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .dice-stage {
+    min-height: 260px;
+  }
+
+  .heatmap-mini {
+    min-width: 100%;
+  }
+
+  .hero-panel,
+  .calendar-panel {
     grid-column: auto;
   }
 
