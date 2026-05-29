@@ -416,7 +416,9 @@ function bindHistoryGestures() {
       restoreRecord(shell.dataset.recordId);
     });
     deleteBtn.addEventListener("click", function () {
-      permanentDeleteRecord(shell.dataset.recordId);
+      if (confirm("彻底删除后无法恢复，确定吗？")) {
+        permanentDeleteRecord(shell.dataset.recordId);
+      }
     });
 
     card.addEventListener("pointerdown", function (event) {
@@ -436,12 +438,14 @@ function bindHistoryGestures() {
     card.addEventListener("pointerup", function (event) {
       if (pointerId !== event.pointerId) return;
       card.releasePointerCapture(pointerId);
-      if (currentX < -92) {
-        permanentDeleteRecord(shell.dataset.recordId);
-        return;
-      }
       if (currentX > 92) {
         restoreRecord(shell.dataset.recordId);
+        return;
+      }
+      if (currentX < -92) {
+        card.classList.remove("is-dragging");
+        card.style.transform = "translateX(-96px)";
+        pointerId = null;
         return;
       }
       card.classList.remove("is-dragging");
