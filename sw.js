@@ -1,4 +1,4 @@
-const CACHE_NAME = "dice-decision-app-v2";
+const CACHE_NAME = "dice-decision-app-v3";
 const ASSETS = ["./", "./index.html", "./styles.css", "./app.js", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -11,11 +11,22 @@ self.addEventListener("activate", (event) => {
     caches
       .keys()
       .then((names) => Promise.all(names.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))))
-      .then(() => self.clients.claim()),
+      .then(() => self.clients.claim())
+      .then(() => self.clients.matchAll().then((clients) => clients.forEach(function (client) { client.postMessage({ type: "update" }); }))),
   );
 });
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
-  event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request)));
+  event.respondWith(
+    fetch(event.request)
+      .then(function (response) {
+        var cloned = response.clone();
+        caches.open(CACHE_NAME).then(function (cache) { cache.put(event.request, cloned); });
+        return response;
+      })
+      .catch(function () {
+        return caches.match(event.request);
+      }),
+  );
 });

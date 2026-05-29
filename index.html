@@ -115,7 +115,13 @@
     <script src="app.js"></script>
     <script>
       if ("serviceWorker" in navigator) {
+        var hadController = !!navigator.serviceWorker.controller;
         navigator.serviceWorker.register("sw.js");
+        navigator.serviceWorker.addEventListener("message", function (event) {
+          if (event.data && event.data.type === "update" && hadController) {
+            window.location.reload();
+          }
+        });
       }
     </script>
   </body>
