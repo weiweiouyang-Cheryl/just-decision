@@ -476,6 +476,7 @@ function restoreRecord(recordId) {
     record.deleted = false;
     saveRecords();
     render();
+    if (els.historyModal.classList.contains("is-open")) renderHistory();
   }
 }
 
