@@ -338,7 +338,7 @@ function renderHeatmap() {
 
   var cells = [];
   var dates = [];
-  for (var i = 0; i < 84; i += 1) {
+  for (var i = 83; i >= 0; i -= 1) {
     var day = new Date(start);
     day.setDate(start.getDate() + i);
     var key = dateKey(day);
