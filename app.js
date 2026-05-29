@@ -21,6 +21,7 @@ const encouragements = [
 
 const els = {
   settingsButton: document.querySelector("#settingsButton"),
+  historyButton: document.querySelector("#historyButton"),
   dice: document.querySelector("#dice"),
   decisionText: document.querySelector("#decisionText"),
   encouragementText: document.querySelector("#encouragementText"),
@@ -33,6 +34,10 @@ const els = {
   closeSettingsButton: document.querySelector("#closeSettingsButton"),
   meaningGrid: document.querySelector("#meaningGrid"),
   saveSettingsButton: document.querySelector("#saveSettingsButton"),
+  historyModal: document.querySelector("#historyModal"),
+  closeHistoryButton: document.querySelector("#closeHistoryButton"),
+  historyList: document.querySelector("#historyList"),
+  historyEmpty: document.querySelector("#historyEmpty"),
   todayCount: document.querySelector("#todayCount"),
   todayList: document.querySelector("#todayList"),
   monthLabel: document.querySelector("#monthLabel"),
@@ -76,6 +81,14 @@ function saveRecords() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 }
 
+function activeRecords() {
+  return records.filter(function (r) { return !r.deleted; });
+}
+
+function deletedRecords() {
+  return records.filter(function (r) { return r.deleted; });
+}
+
 function loadMeanings() {
   try {
     const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY));
@@ -111,6 +124,17 @@ function openSettings() {
 function closeSettings() {
   els.settingsModal.classList.remove("is-open");
   els.settingsModal.setAttribute("aria-hidden", "true");
+}
+
+function openHistory() {
+  renderHistory();
+  els.historyModal.classList.add("is-open");
+  els.historyModal.setAttribute("aria-hidden", "false");
+}
+
+function closeHistory() {
+  els.historyModal.classList.remove("is-open");
+  els.historyModal.setAttribute("aria-hidden", "true");
 }
 
 function renderMeaningFields() {
@@ -162,6 +186,7 @@ function rollDice() {
     encouragement,
     createdAt,
     date: dateKey(new Date()),
+    deleted: false,
   });
 
   saveRecords();
@@ -175,11 +200,11 @@ function randomEncouragement() {
 
 function getTodayRecords() {
   const today = dateKey(new Date());
-  return records.filter((record) => record.date === today);
+  return activeRecords().filter(function (record) { return record.date === today; });
 }
 
 function groupByDate() {
-  return records.reduce((groups, record) => {
+  return activeRecords().reduce(function (groups, record) {
     groups[record.date] ||= [];
     groups[record.date].push(record);
     return groups;
@@ -248,7 +273,7 @@ function renderCalendar() {
 }
 
 function renderHeatmap() {
-  const counts = records.reduce((acc, record) => {
+  const counts = activeRecords().reduce(function (acc, record) {
     acc[record.date] = (acc[record.date] || 0) + 1;
     return acc;
   }, {});
@@ -275,6 +300,87 @@ function heatLevel(count) {
   return 4;
 }
 
+function renderHistory() {
+  var list = deletedRecords();
+  if (list.length === 0) {
+    els.historyList.style.display = "none";
+    els.historyEmpty.style.display = "block";
+    return;
+  }
+  els.historyList.style.display = "";
+  els.historyEmpty.style.display = "none";
+
+  els.historyList.innerHTML = list
+    .map(function (record) {
+      return (
+        '<article class="record-shell history-shell" data-record-id="' +
+        record.id +
+        '">' +
+        '<div class="record-card history-record-card">' +
+        "<div><strong>" +
+        record.value +
+        "</strong><span>" +
+        formatTime(record.createdAt) +
+        "</span><span class='history-date'>" +
+        record.date +
+        "</span></div>" +
+        "<p>" +
+        escapeHtml(record.question) +
+        "</p>" +
+        "<small>" +
+        escapeHtml(record.meaning || meanings[record.value]) +
+        "</small>" +
+        "</div>" +
+        "</article>"
+      );
+    })
+    .join("");
+
+  bindHistoryGestures();
+}
+
+function bindHistoryGestures() {
+  var shells = els.historyList.querySelectorAll(".history-shell");
+  var timer = null;
+  var touchId = null;
+
+  shells.forEach(function (shell) {
+    var card = shell.querySelector(".history-record-card");
+
+    card.addEventListener("pointerdown", function (event) {
+      touchId = event.pointerId;
+      card.setPointerCapture(touchId);
+      timer = setTimeout(function () {
+        restoreRecord(shell.dataset.recordId);
+        timer = null;
+      }, 800);
+    });
+
+    card.addEventListener("pointermove", function (event) {
+      if (timer && touchId === event.pointerId) {
+        clearTimeout(timer);
+        timer = null;
+      }
+    });
+
+    card.addEventListener("pointerup", function (event) {
+      if (touchId === event.pointerId && timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      touchId = null;
+    });
+
+    card.addEventListener("pointercancel", function () {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      touchId = null;
+    });
+  });
+}
+
 function escapeHtml(value) {
   return value
     .replaceAll("&", "&amp;")
@@ -289,9 +395,21 @@ function escapeAttribute(value) {
 }
 
 function deleteRecord(recordId) {
-  records = records.filter((record) => record.id !== recordId);
-  saveRecords();
-  render();
+  var record = records.find(function (r) { return r.id === recordId; });
+  if (record) {
+    record.deleted = true;
+    saveRecords();
+    render();
+  }
+}
+
+function restoreRecord(recordId) {
+  var record = records.find(function (r) { return r.id === recordId; });
+  if (record) {
+    record.deleted = false;
+    saveRecords();
+    render();
+  }
 }
 
 function bindRecordGestures() {
@@ -346,8 +464,10 @@ function render() {
 
 els.openPromptButton.addEventListener("click", openPrompt);
 els.settingsButton.addEventListener("click", openSettings);
+els.historyButton.addEventListener("click", openHistory);
 els.closePromptButton.addEventListener("click", closePrompt);
 els.closeSettingsButton.addEventListener("click", closeSettings);
+els.closeHistoryButton.addEventListener("click", closeHistory);
 els.rollButton.addEventListener("click", rollDice);
 els.saveSettingsButton.addEventListener("click", saveMeaningFields);
 els.prevMonthButton.addEventListener("click", () => {
@@ -361,13 +481,17 @@ els.nextMonthButton.addEventListener("click", () => {
 els.promptModal.addEventListener("click", (event) => {
   if (event.target === els.promptModal) closePrompt();
 });
-els.settingsModal.addEventListener("click", (event) => {
+els.settingsModal.addEventListener("click", function (event) {
   if (event.target === els.settingsModal) closeSettings();
+});
+els.historyModal.addEventListener("click", function (event) {
+  if (event.target === els.historyModal) closeHistory();
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closePrompt();
     closeSettings();
+    closeHistory();
   }
   if ((event.metaKey || event.ctrlKey) && event.key === "Enter" && els.promptModal.classList.contains("is-open")) {
     rollDice();

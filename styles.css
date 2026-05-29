@@ -400,6 +400,7 @@ h2 {
 .prompt-modal {
   position: fixed;
   inset: 0;
+  z-index: 10;
   display: none;
   place-items: center;
   padding: 20px;
@@ -471,6 +472,57 @@ textarea {
   background: #fffdf9;
   color: var(--ink);
   line-height: 1.5;
+}
+
+.history-card {
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.history-hint {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.history-list {
+  margin-top: 16px;
+  display: grid;
+  gap: 10px;
+  overflow: auto;
+  flex: 1;
+}
+
+.history-empty {
+  margin-top: 16px;
+  padding: 36px 14px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  display: none;
+}
+
+.history-date {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.history-record-card {
+  position: relative;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffdf9;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.history-record-card:active {
+  background: #f5ede4;
 }
 
 @media (max-width: 780px) {

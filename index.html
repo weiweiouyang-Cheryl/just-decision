@@ -21,6 +21,7 @@
             <p class="eyebrow">给纠结一个出口</p>
             <h1>纠结骰子</h1>
           </div>
+          <button class="icon-button" id="historyButton" type="button" title="历史记录" aria-label="历史记录">&#8634;</button>
           <button class="icon-button" id="settingsButton" type="button" title="设置点数含义" aria-label="设置点数含义">⚙</button>
         </div>
 
@@ -95,6 +96,18 @@
           </div>
           <div class="meaning-grid" id="meaningGrid"></div>
           <button class="roll-button" id="saveSettingsButton" type="button">保存</button>
+        </div>
+      </section>
+
+      <section class="prompt-modal" id="historyModal" aria-hidden="true">
+        <div class="prompt-card history-card" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+          <div class="panel-header">
+            <h2 id="historyTitle">历史记录</h2>
+            <button class="icon-button" id="closeHistoryButton" type="button" aria-label="关闭">×</button>
+          </div>
+          <p class="history-hint">长按可复原已删除的记录</p>
+          <div class="history-list" id="historyList"></div>
+          <div class="history-empty" id="historyEmpty">没有已删除的记录</div>
         </div>
       </section>
     </main>
