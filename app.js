@@ -156,11 +156,11 @@ function openDayModal(dateStr) {
       .map(function (record) {
         return (
           '<article class="day-record-item">' +
-          "<div class='day-record-head'><strong>" +
-          record.value +
-          "</strong><span>" +
+          "<div class='day-record-head'>" +
+          miniDiceHtml(record.value) +
+          "<div><span>" +
           formatTime(record.createdAt) +
-          "</span></div>" +
+          "</span></div></div>" +
           "<p>" +
           escapeHtml(record.question) +
           "</p>" +
@@ -177,6 +177,12 @@ function openDayModal(dateStr) {
   }
   els.dayModal.classList.add("is-open");
   els.dayModal.setAttribute("aria-hidden", "false");
+}
+
+function miniDiceHtml(value) {
+  var dots = "";
+  for (var i = 1; i <= 9; i++) dots += "<span></span>";
+  return '<div class="mini-dice" data-value="' + value + '">' + dots + "</div>";
 }
 
 function closeDayModal() {
@@ -444,8 +450,11 @@ function bindHistoryGestures() {
       }
       if (currentX < -92) {
         card.classList.remove("is-dragging");
-        card.style.transform = "translateX(-96px)";
+        card.style.transform = "";
         pointerId = null;
+        if (confirm("彻底删除后无法恢复，确定吗？")) {
+          permanentDeleteRecord(shell.dataset.recordId);
+        }
         return;
       }
       card.classList.remove("is-dragging");

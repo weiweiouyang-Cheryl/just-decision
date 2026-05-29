@@ -314,13 +314,15 @@ h2 {
 }
 
 .calendar-day {
-  min-height: 92px;
+  aspect-ratio: 1;
   padding: 8px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fffdf9;
   cursor: pointer;
   transition: border-color 120ms ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .calendar-day:hover {
@@ -341,26 +343,35 @@ h2 {
   color: var(--muted);
   font-size: 0.82rem;
   font-weight: 800;
+  flex-shrink: 0;
 }
 
 .calendar-results {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 8px;
+  display: grid;
+  place-items: center;
+  flex: 1;
 }
 
 .result-chip {
-  min-width: 24px;
-  height: 24px;
+  grid-area: 1 / 1;
+  min-width: 22px;
+  height: 22px;
   display: inline-grid;
   place-items: center;
-  border-radius: 7px;
+  border-radius: 6px;
   background: #f0dfce;
   color: var(--ink);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 900;
+  box-shadow: 0 0 0 2px #fffdf9;
 }
+
+.result-chip:nth-child(1) { z-index: 5; transform: translate(-10px, -10px); }
+.result-chip:nth-child(2) { z-index: 4; transform: translate(-5px, -5px); }
+.result-chip:nth-child(3) { z-index: 3; transform: translate(0, 0); }
+.result-chip:nth-child(4) { z-index: 2; transform: translate(5px, 5px); }
+.result-chip:nth-child(5) { z-index: 1; transform: translate(10px, 10px); }
+.result-chip:nth-child(6) { z-index: 1; transform: translate(10px, 10px); }
 
 .heatmap-wrap {
   margin-top: 18px;
@@ -591,17 +602,55 @@ textarea {
 .day-record-head {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
-.day-record-head strong {
-  display: inline-grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: #f2ded5;
-  color: var(--clay);
+.mini-dice {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 3px;
+  padding: 7px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #fffdf8, #ead6c8);
+  border: 1px solid #dec8bb;
+}
+
+.mini-dice span {
+  width: 8px;
+  height: 8px;
+  align-self: center;
+  justify-self: center;
+  border-radius: 999px;
+  background: var(--clay);
+  opacity: 0;
+}
+
+.mini-dice[data-value="1"] span:nth-child(5),
+.mini-dice[data-value="2"] span:nth-child(1),
+.mini-dice[data-value="2"] span:nth-child(9),
+.mini-dice[data-value="3"] span:nth-child(1),
+.mini-dice[data-value="3"] span:nth-child(5),
+.mini-dice[data-value="3"] span:nth-child(9),
+.mini-dice[data-value="4"] span:nth-child(1),
+.mini-dice[data-value="4"] span:nth-child(3),
+.mini-dice[data-value="4"] span:nth-child(7),
+.mini-dice[data-value="4"] span:nth-child(9),
+.mini-dice[data-value="5"] span:nth-child(1),
+.mini-dice[data-value="5"] span:nth-child(3),
+.mini-dice[data-value="5"] span:nth-child(5),
+.mini-dice[data-value="5"] span:nth-child(7),
+.mini-dice[data-value="5"] span:nth-child(9),
+.mini-dice[data-value="6"] span:nth-child(1),
+.mini-dice[data-value="6"] span:nth-child(3),
+.mini-dice[data-value="6"] span:nth-child(4),
+.mini-dice[data-value="6"] span:nth-child(6),
+.mini-dice[data-value="6"] span:nth-child(7),
+.mini-dice[data-value="6"] span:nth-child(9) {
+  opacity: 1;
 }
 
 .day-record-item p {
@@ -640,7 +689,6 @@ textarea {
   }
 
   .calendar-day {
-    min-height: 72px;
     padding: 6px;
   }
 
