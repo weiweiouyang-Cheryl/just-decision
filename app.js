@@ -223,11 +223,12 @@ function toggleAccountPanel() {
 
 function handleAccountError(e) {
   var msg = e.message || "出错了";
-  if (msg.indexOf("invalid") !== -1) msg = "邮箱格式不对";
+  console.log("Auth error:", msg);
+  if (msg.indexOf("invalid") !== -1 || msg.indexOf("Invalid") !== -1) msg = "邮箱格式不对";
   else if (msg.indexOf("password") !== -1) msg = "密码至少需要6位";
-  else if (msg.indexOf("already") !== -1) msg = "这个邮箱已经注册了";
-  else if (msg.indexOf("Invalid") !== -1) msg = "邮箱或密码不对";
+  else if (msg.indexOf("already") !== -1) msg = "这个邮箱已经注册了，请直接登录";
   else if (msg.indexOf("rate") !== -1) msg = "尝试太多次了，稍后再试";
+  else if (msg.indexOf("not found") !== -1) msg = "项目未正确配置，请检查 Supabase";
   els.accountError.textContent = msg;
 }
 
