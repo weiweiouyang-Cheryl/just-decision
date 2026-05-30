@@ -733,7 +733,7 @@ textarea {
 }
 
 .splash .dice-cube.is-spin {
-  animation: splashSpin 6s cubic-bezier(0.05, 0.7, 0.15, 1) forwards;
+  animation: splashSpin 6s linear forwards;
 }
 
 .splash-title-wrap {
@@ -826,20 +826,20 @@ textarea {
   0% {
     transform: rotateX(15deg) rotateY(0deg) rotateZ(0deg);
   }
-  8% {
-    transform: rotateX(105deg) rotateY(360deg) rotateZ(180deg);
+  20% {
+    transform: rotateX(135deg) rotateY(720deg) rotateZ(180deg);
   }
-  25% {
-    transform: rotateX(195deg) rotateY(900deg) rotateZ(360deg);
+  40% {
+    transform: rotateX(255deg) rotateY(1440deg) rotateZ(360deg);
   }
-  50% {
-    transform: rotateX(255deg) rotateY(1260deg) rotateZ(540deg);
+  60% {
+    transform: rotateX(15deg) rotateY(2160deg) rotateZ(540deg);
   }
   80% {
-    transform: rotateX(285deg) rotateY(1440deg) rotateZ(620deg);
+    transform: rotateX(135deg) rotateY(2880deg) rotateZ(720deg);
   }
   100% {
-    transform: rotateX(285deg) rotateY(1500deg) rotateZ(630deg);
+    transform: rotateX(15deg) rotateY(3600deg) rotateZ(900deg);
   }
 }
 
