@@ -437,7 +437,7 @@ h2 {
 }
 
 [data-level="4"] {
-  background: #7f9377;
+  background: #8b5e4b;
 }
 
 .prompt-modal {
@@ -717,6 +717,9 @@ textarea {
 
 .splash-stage {
   grid-area: 1 / 1;
+  width: 142px;
+  height: 142px;
+  perspective: 600px;
   transform: translateY(-130vh);
   opacity: 0;
 }
