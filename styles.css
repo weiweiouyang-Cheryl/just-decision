@@ -139,6 +139,7 @@ h2 {
   width: 142px;
   height: 142px;
   filter: drop-shadow(0 8px 16px rgba(80,50,30,0.22));
+  cursor: pointer;
 }
 
 .dice-cube {

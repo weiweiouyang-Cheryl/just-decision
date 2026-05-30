@@ -574,7 +574,7 @@ function render() {
   renderHeatmap();
 }
 
-els.openPromptButton.addEventListener("click", openPrompt);
+els.dice.addEventListener("click", openPrompt);
 els.settingsButton.addEventListener("click", openSettings);
 els.historyButton.addEventListener("click", openHistory);
 els.closePromptButton.addEventListener("click", closePrompt);
