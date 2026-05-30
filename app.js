@@ -377,8 +377,10 @@ function renderHeatmap() {
 
   els.heatmap.innerHTML = cells.join("");
   var labels = "";
+  var col = 0;
   for (var j = 0; j < months.length; j++) {
-    labels += '<span style="grid-column: span ' + months[j].span + '">' + months[j].name + '</span>';
+    labels += '<span style="position:absolute;left:' + (col * 16) + 'px">' + months[j].name + '</span>';
+    col += months[j].span;
   }
   els.heatmapMonths.innerHTML = labels;
 
