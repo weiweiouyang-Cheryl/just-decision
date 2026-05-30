@@ -644,11 +644,11 @@ render();
 
       setTimeout(function () {
         splash.classList.add("is-done");
-      }, 4500);
+      }, 3500);
 
       setTimeout(function () {
         splash.remove();
-      }, 5200);
+      }, 4100);
     });
   });
 })();

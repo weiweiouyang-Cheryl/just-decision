@@ -730,15 +730,15 @@ textarea {
 }
 
 .splash-cube {
-  width: 130px;
-  height: 130px;
+  width: 142px;
+  height: 142px;
   transform-style: preserve-3d;
   animation: cubeTumble 3s linear infinite;
   filter: drop-shadow(0 10px 20px rgba(80,50,30,0.25));
 }
 
 .splash-cube.is-spin {
-  animation: splashSpin 3s cubic-bezier(0.05, 0.7, 0.15, 1) forwards;
+  animation: splashSpin 2s cubic-bezier(0.05, 0.7, 0.15, 1) forwards;
 }
 
 .splash-title-wrap {
@@ -753,7 +753,7 @@ textarea {
 }
 
 .splash-title-wrap.is-show {
-  animation: titleGrow 2s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+  animation: titleGrow 1.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
 }
 
 .splash-title {
