@@ -633,13 +633,13 @@ render();
       stage.classList.add("is-fall");
       setTimeout(function () {
         stage.classList.add("is-settle");
-      }, 850);
+      }, 950);
       setTimeout(function () {
         splash.classList.add("is-done");
-      }, 1600);
+      }, 3200);
       setTimeout(function () {
         splash.remove();
-      }, 2100);
+      }, 3800);
     });
   });
 })();
