@@ -51,6 +51,14 @@ const els = {
   calendarGrid: document.querySelector("#calendarGrid"),
   heatmap: document.querySelector("#heatmap"),
   heatmapMonths: document.querySelector("#heatmapMonths"),
+  authButton: document.querySelector("#authButton"),
+  authModal: document.querySelector("#authModal"),
+  closeAuthButton: document.querySelector("#closeAuthButton"),
+  authEmail: document.querySelector("#authEmail"),
+  authPassword: document.querySelector("#authPassword"),
+  authError: document.querySelector("#authError"),
+  signUpButton: document.querySelector("#signUpButton"),
+  logInButton: document.querySelector("#logInButton"),
 };
 
 let records = loadRecords();
@@ -73,13 +81,12 @@ function formatTime(value) {
 
 function loadRecords() {
   try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    var saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (!Array.isArray(saved)) return [];
-    return saved.map((record, index) => ({
-      ...record,
-      id: record.id || `${record.createdAt || "record"}-${index}`,
-    }));
-  } catch {
+    return saved.map(function (record, index) {
+      return Object.assign({}, record, { id: record.id || (record.createdAt || "record") + "-" + index });
+    });
+  } catch (e) {
     return [];
   }
 }
@@ -189,6 +196,133 @@ function miniDiceHtml(value) {
 function closeDayModal() {
   els.dayModal.classList.remove("is-open");
   els.dayModal.setAttribute("aria-hidden", "true");
+}
+
+function openAuth() {
+  els.authModal.classList.add("is-open");
+  els.authModal.setAttribute("aria-hidden", "false");
+  els.authError.textContent = "";
+  els.authEmail.focus();
+}
+
+function closeAuth() {
+  els.authModal.classList.remove("is-open");
+  els.authModal.setAttribute("aria-hidden", "true");
+}
+
+function handleAuthError(e) {
+  var msg = e.message || "出错了";
+  if (msg.indexOf("invalid-email") !== -1) msg = "邮箱格式不对";
+  else if (msg.indexOf("weak-password") !== -1) msg = "密码至少需要6位";
+  else if (msg.indexOf("email-already-in-use") !== -1) msg = "这个邮箱已经注册了";
+  else if (msg.indexOf("user-not-found") !== -1 || msg.indexOf("wrong-password") !== -1) msg = "邮箱或密码不对";
+  else if (msg.indexOf("too-many-requests") !== -1) msg = "尝试太多次了，稍后再试";
+  els.authError.textContent = msg;
+}
+
+function doSignUp() {
+  var email = els.authEmail.value.trim();
+  var password = els.authPassword.value;
+  if (!email || !password) { els.authError.textContent = "请填写邮箱和密码"; return; }
+  signUp(email, password).then(function () {
+    closeAuth();
+  }).catch(handleAuthError);
+}
+
+function doLogIn() {
+  var email = els.authEmail.value.trim();
+  var password = els.authPassword.value;
+  if (!email || !password) { els.authError.textContent = "请填写邮箱和密码"; return; }
+  logIn(email, password).then(function () {
+    closeAuth();
+  }).catch(handleAuthError);
+}
+
+function doLogOut() {
+  logOut().then(function () {
+    loadLocalRecords();
+    render();
+  });
+}
+
+function updateUserUI(user) {
+  var statusEl = document.getElementById("authUser");
+  var emailEl = document.getElementById("authUserEmail");
+  var logoutBtn = document.getElementById("authLogoutButton");
+  if (user) {
+    els.authButton.textContent = "✓";
+    els.authButton.title = "已登录 - 点击退出";
+    els.authButton.style.color = "var(--moss)";
+    if (statusEl) { statusEl.style.display = "flex"; emailEl.textContent = user.email; }
+    if (logoutBtn) logoutBtn.onclick = doLogOut;
+  } else {
+    els.authButton.textContent = "✎";
+    els.authButton.title = "登录同步数据";
+    els.authButton.style.color = "";
+    if (statusEl) statusEl.style.display = "none";
+  }
+}
+
+function loadLocalRecords() {
+  try {
+    var saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (Array.isArray(saved)) records = saved.map(function (r, i) {
+      r.id = r.id || (r.createdAt || "r") + "-" + i;
+      return r;
+    });
+    else records = [];
+  } catch (e) { records = []; }
+}
+
+initFirebase();
+onUserChange = function (user) {
+  updateUserUI(user);
+  if (user) {
+    loadFromCloud().then(function (cloudRecords) {
+      if (cloudRecords && cloudRecords.length > 0) {
+        var local = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        if (!Array.isArray(local)) local = [];
+        var merged = mergeRecords(local, cloudRecords);
+        records = merged;
+      } else {
+        var local = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        if (Array.isArray(local) && local.length > 0) {
+          records = local;
+          saveToCloud(records);
+        } else {
+          records = cloudRecords || [];
+        }
+      }
+      saveLocal();
+      render();
+    }).catch(function () {
+      loadLocalRecords();
+      render();
+    });
+  } else {
+    loadLocalRecords();
+    render();
+  }
+};
+
+function mergeRecords(local, cloud) {
+  var ids = {};
+  var merged = [];
+  cloud.forEach(function (r) { ids[r.id] = true; merged.push(r); });
+  local.forEach(function (r) {
+    if (!ids[r.id]) merged.push(r);
+  });
+  merged.sort(function (a, b) { return new Date(b.createdAt || 0) - new Date(a.createdAt || 0); });
+  return merged;
+}
+
+function saveLocal() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+}
+
+function saveRecords() {
+  saveLocal();
+  if (currentUser) saveToCloud(records);
 }
 
 function renderMeaningFields() {
@@ -636,12 +770,27 @@ els.closeDayButton.addEventListener("click", closeDayModal);
 els.dayModal.addEventListener("click", function (event) {
   if (event.target === els.dayModal) closeDayModal();
 });
+els.authButton.addEventListener("click", function () {
+  if (currentUser) { doLogOut(); } else { openAuth(); }
+});
+els.closeAuthButton.addEventListener("click", closeAuth);
+els.authModal.addEventListener("click", function (event) {
+  if (event.target === els.authModal) closeAuth();
+});
+els.signUpButton.addEventListener("click", doSignUp);
+els.logInButton.addEventListener("click", doLogIn);
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" && els.authModal.classList.contains("is-open")) {
+    if (event.shiftKey) { doLogIn(); } else { doSignUp(); }
+  }
+});
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closePrompt();
     closeSettings();
     closeHistory();
     closeDayModal();
+    closeAuth();
   }
   if ((event.metaKey || event.ctrlKey) && event.key === "Enter" && els.promptModal.classList.contains("is-open")) {
     rollDice();
