@@ -611,7 +611,27 @@ document.addEventListener("keydown", (event) => {
 
 render();
 
-setTimeout(function () {
+(function () {
   var splash = document.getElementById("splash");
-  if (splash) splash.remove();
-}, 2700);
+  if (!splash) return;
+  var dice = splash.querySelector(".splash-dice");
+  var title = splash.querySelector(".splash-title");
+
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      dice.classList.add("is-fall");
+      setTimeout(function () {
+        dice.classList.add("is-settle");
+      }, 900);
+      setTimeout(function () {
+        title.classList.add("is-show");
+      }, 1200);
+      setTimeout(function () {
+        splash.classList.add("is-done");
+      }, 2200);
+      setTimeout(function () {
+        splash.remove();
+      }, 2700);
+    });
+  });
+})();

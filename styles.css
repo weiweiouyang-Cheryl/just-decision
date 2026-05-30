@@ -695,10 +695,12 @@ textarea {
   background:
     linear-gradient(135deg, rgba(201, 143, 123, 0.16), transparent 36rem),
     linear-gradient(180deg, #f8f1ea 0%, #f4eee6 100%);
-  animation-name: splashFadeOut;
-  animation-duration: 400ms;
-  animation-delay: 2200ms;
-  animation-fill-mode: forwards;
+  transition: opacity 400ms ease;
+}
+
+.splash.is-done {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .splash-dice {
@@ -713,11 +715,16 @@ textarea {
   background: linear-gradient(145deg, #fffdf8, #ead6c8);
   border: 1px solid #dec8bb;
   box-shadow: 0 18px 34px rgba(101, 76, 63, 0.16);
-  animation-name: diceFall, diceSettle;
-  animation-duration: 700ms, 600ms;
-  animation-delay: 200ms, 900ms;
-  animation-fill-mode: both, both;
-  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1), ease;
+  transform: translateY(-120vh) rotate(0deg);
+  opacity: 0;
+}
+
+.splash-dice.is-fall {
+  animation: diceFall 700ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+.splash-dice.is-settle {
+  animation: diceSettle 600ms ease forwards;
 }
 
 .splash-dice span {
@@ -743,10 +750,11 @@ textarea {
   font-weight: 900;
   color: var(--ink);
   opacity: 0;
-  animation-name: titleReveal;
-  animation-duration: 500ms;
-  animation-delay: 1200ms;
-  animation-fill-mode: forwards;
+  transform: scale(0.3) translateY(20px);
+}
+
+.splash-title.is-show {
+  animation: titleReveal 500ms ease forwards;
 }
 
 @keyframes diceFall {
@@ -754,7 +762,7 @@ textarea {
     transform: translateY(-120vh) rotate(0deg);
     opacity: 0;
   }
-  20% {
+  15% {
     opacity: 1;
   }
   100% {
@@ -786,13 +794,6 @@ textarea {
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes splashFadeOut {
-  to {
-    opacity: 0;
-    pointer-events: none;
   }
 }
 
