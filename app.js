@@ -627,7 +627,6 @@ render();
   var splash = document.getElementById("splash");
   if (!splash) return;
   var stage = document.getElementById("splashStage");
-  var cube = document.getElementById("splashCube");
   var titleWrap = document.getElementById("splashTitleWrap");
 
   requestAnimationFrame(function () {
@@ -639,22 +638,6 @@ render();
 
       setTimeout(function () {
         titleWrap.classList.add("is-show");
-
-        cube.style.setProperty("animation", "none", "important");
-        cube.style.setProperty("transition", "none", "important");
-
-        var count = 0;
-        var total = 120;
-        var degPerStep = 3600 / total;
-
-        var timer = setInterval(function () {
-          var deg = degPerStep * (count + 1);
-          cube.style.setProperty("transform", "rotateX(15deg) rotateY(" + deg + "deg) rotateZ(" + (count * 3) + "deg)", "important");
-          count++;
-          if (count >= total) {
-            clearInterval(timer);
-          }
-        }, 25);
       }, 1400);
 
       setTimeout(function () {
