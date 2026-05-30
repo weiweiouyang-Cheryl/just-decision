@@ -626,20 +626,29 @@ render();
 (function () {
   var splash = document.getElementById("splash");
   if (!splash) return;
-  var stage = splash.querySelector(".splash-stage");
+  var stage = document.getElementById("splashStage");
+  var cube = document.getElementById("splashCube");
+  var title = document.getElementById("splashTitle");
 
   requestAnimationFrame(function () {
     requestAnimationFrame(function () {
       stage.classList.add("is-fall");
       setTimeout(function () {
         stage.classList.add("is-settle");
-      }, 950);
+      }, 850);
+
+      setTimeout(function () {
+        cube.classList.add("is-spin");
+        title.classList.add("is-show");
+      }, 1400);
+
       setTimeout(function () {
         splash.classList.add("is-done");
-      }, 3200);
+      }, 4500);
+
       setTimeout(function () {
         splash.remove();
-      }, 3800);
+      }, 5200);
     });
   });
 })();
