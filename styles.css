@@ -368,31 +368,23 @@ h2 {
 }
 
 .calendar-results {
-  display: grid;
-  place-items: center;
-  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 6px;
 }
 
 .result-chip {
-  grid-area: 1 / 1;
-  min-width: 22px;
-  height: 22px;
+  min-width: 20px;
+  height: 20px;
   display: inline-grid;
   place-items: center;
-  border-radius: 6px;
+  border-radius: 5px;
   background: #f0dfce;
   color: var(--ink);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 900;
-  box-shadow: 0 0 0 2px #fffdf9;
 }
-
-.result-chip:nth-child(1) { z-index: 5; transform: translate(-10px, -10px); }
-.result-chip:nth-child(2) { z-index: 4; transform: translate(-5px, -5px); }
-.result-chip:nth-child(3) { z-index: 3; transform: translate(0, 0); }
-.result-chip:nth-child(4) { z-index: 2; transform: translate(5px, 5px); }
-.result-chip:nth-child(5) { z-index: 1; transform: translate(10px, 10px); }
-.result-chip:nth-child(6) { z-index: 1; transform: translate(10px, 10px); }
 
 .heatmap-body {
   display: flex;
