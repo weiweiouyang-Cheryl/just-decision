@@ -157,6 +157,7 @@ h2 {
 }
 
 .account-panel {
+  display: none;
   position: absolute;
   top: 100%;
   left: 0;

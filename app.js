@@ -207,8 +207,11 @@ function closeDayModal() {
 
 function toggleAccountPanel() {
   var panel = els.accountPanel;
-  panel.style.display = panel.style.display === "block" ? "none" : "block";
-  if (panel.style.display === "block") {
+  var isOpen = panel.style.display === "block";
+  if (isOpen) {
+    panel.style.display = "none";
+  } else {
+    panel.style.display = "block";
     els.accountError.textContent = "";
     if (currentUser) {
       els.accountLoggedOut.style.display = "none";
