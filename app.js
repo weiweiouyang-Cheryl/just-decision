@@ -628,7 +628,7 @@ render();
   if (!splash) return;
   var stage = document.getElementById("splashStage");
   var cube = document.getElementById("splashCube");
-  var title = document.getElementById("splashTitle");
+  var titleWrap = document.getElementById("splashTitleWrap");
 
   requestAnimationFrame(function () {
     requestAnimationFrame(function () {
@@ -639,7 +639,7 @@ render();
 
       setTimeout(function () {
         cube.classList.add("is-spin");
-        title.classList.add("is-show");
+        titleWrap.classList.add("is-show");
       }, 1400);
 
       setTimeout(function () {
