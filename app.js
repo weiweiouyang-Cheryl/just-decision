@@ -227,13 +227,24 @@ function toggleAccountPanel() {
 }
 
 function handleAccountError(e) {
-  var msg = e.message || "出错了";
-  console.log("Auth error:", msg);
-  if (msg.indexOf("invalid") !== -1 || msg.indexOf("Invalid") !== -1) msg = "邮箱格式不对";
-  else if (msg.indexOf("password") !== -1) msg = "密码至少需要6位";
-  else if (msg.indexOf("already") !== -1) msg = "这个邮箱已经注册了，请直接登录";
-  else if (msg.indexOf("rate") !== -1) msg = "尝试太多次了，稍后再试";
-  else if (msg.indexOf("not found") !== -1) msg = "项目未正确配置，请检查 Supabase";
+  var msg = (e && e.message) || "出错了";
+  var code = (e && e.code) || "";
+  console.log("Auth error:", code, msg);
+  if (code === "user_already_exists" || msg.indexOf("already") !== -1) {
+    msg = "该邮箱已注册，请直接登录";
+  } else if (code === "invalid_credentials" || msg.indexOf("Invalid login") !== -1) {
+    msg = "密码错误，请重试";
+  } else if (msg.indexOf("Email not confirmed") !== -1) {
+    msg = "请先验证邮箱（检查收件箱）";
+  } else if (msg.indexOf("invalid") !== -1 || msg.indexOf("Invalid") !== -1) {
+    msg = "邮箱格式不对";
+  } else if (msg.indexOf("password") !== -1 && msg.indexOf("weak") !== -1) {
+    msg = "密码至少需要6位";
+  } else if (msg.indexOf("rate") !== -1) {
+    msg = "尝试太多次了，请稍后再试";
+  } else if (msg.indexOf("not found") !== -1) {
+    msg = "项目未正确配置，请检查 Supabase";
+  }
   els.accountError.textContent = msg;
 }
 
