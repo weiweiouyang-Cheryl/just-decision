@@ -50,6 +50,7 @@ const els = {
   nextMonthButton: document.querySelector("#nextMonthButton"),
   calendarGrid: document.querySelector("#calendarGrid"),
   heatmap: document.querySelector("#heatmap"),
+  heatmapMonths: document.querySelector("#heatmapMonths"),
 };
 
 let records = loadRecords();
@@ -340,25 +341,46 @@ function renderCalendar() {
 }
 
 function renderHeatmap() {
-  const counts = activeRecords().reduce(function (acc, record) {
+  var counts = activeRecords().reduce(function (acc, record) {
     acc[record.date] = (acc[record.date] || 0) + 1;
     return acc;
   }, {});
-  const end = new Date();
-  const start = new Date(end);
+  var end = new Date();
+  var start = new Date(end);
   start.setDate(end.getDate() - 83);
 
   var cells = [];
   var dates = [];
+  var months = [];
+  var lastMonth = null;
+  var monthSpan = 0;
   for (var i = 83; i >= 0; i -= 1) {
     var day = new Date(start);
     day.setDate(start.getDate() + i);
     var key = dateKey(day);
     var count = counts[key] || 0;
+    var m = day.getMonth();
     dates.push(key);
     cells.push('<span class="heat-cell" data-level="' + heatLevel(count) + '" data-date="' + key + '" title="' + key + '，摇了 ' + count + ' 次"></span>');
+
+    if ((83 - i) % 7 === 0) {
+      if (m !== lastMonth) {
+        if (monthSpan > 0) months.push({ name: monthNames[lastMonth], span: monthSpan });
+        lastMonth = m;
+        monthSpan = 1;
+      } else {
+        monthSpan++;
+      }
+    }
   }
+  if (monthSpan > 0) months.push({ name: monthNames[lastMonth], span: monthSpan });
+
   els.heatmap.innerHTML = cells.join("");
+  var labels = "";
+  for (var j = 0; j < months.length; j++) {
+    labels += '<span style="grid-column: span ' + months[j].span + '">' + months[j].name + '</span>';
+  }
+  els.heatmapMonths.innerHTML = labels;
 
   els.heatmap.querySelectorAll(".heat-cell").forEach(function (cell, index) {
     cell.addEventListener("click", function () {
@@ -371,6 +393,8 @@ function renderHeatmap() {
     });
   });
 }
+
+var monthNames = ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
 
 function heatLevel(count) {
   if (count <= 0) return 0;
