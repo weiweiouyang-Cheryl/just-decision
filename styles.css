@@ -300,7 +300,8 @@ h2 {
 .dice-stage {
   display: grid;
   place-items: center;
-  min-height: 310px;
+  min-height: 280px;
+  padding-top: 40px;
   text-align: center;
 }
 
