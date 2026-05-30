@@ -610,3 +610,8 @@ document.addEventListener("keydown", (event) => {
 });
 
 render();
+
+setTimeout(function () {
+  var splash = document.getElementById("splash");
+  if (splash) splash.remove();
+}, 2700);
