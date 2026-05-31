@@ -1,4 +1,4 @@
-const CACHE_NAME = "dice-decision-app-v5";
+const CACHE_NAME = "dice-decision-app-v6";
 const ASSETS = ["./", "./index.html", "./styles.css", "./app.js", "./supabase-config.js", "./supabase.js", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
