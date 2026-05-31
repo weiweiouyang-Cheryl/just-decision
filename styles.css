@@ -783,8 +783,8 @@ textarea {
   padding: 2px 6px;
 }
 
-.history-card {
-  width: min(560px, 100%);
+#historyModal .prompt-card {
+  width: min(600px, 95vw);
   max-height: 80vh;
   display: flex;
   flex-direction: column;
@@ -856,8 +856,8 @@ textarea {
   transition: none;
 }
 
-.day-modal-card {
-  width: min(560px, 100%);
+#dayModal .prompt-card {
+  width: min(600px, 95vw);
   max-height: 70vh;
   display: flex;
   flex-direction: column;
