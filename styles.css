@@ -464,7 +464,7 @@ h2 {
   margin-top: 18px;
   max-height: 376px;
   overflow: auto;
-  min-width: 0;
+  grid-auto-rows: max-content;
 }
 
 .record-card small,
@@ -801,6 +801,8 @@ textarea {
   gap: 10px;
   overflow: auto;
   flex: 1;
+  grid-auto-rows: max-content;
+  align-content: start;
 }
 
 .history-empty {
@@ -852,7 +854,8 @@ textarea {
   gap: 10px;
   overflow: auto;
   flex: 1;
-  min-width: 0;
+  grid-auto-rows: max-content;
+  align-content: start;
 }
 
 .day-modal-empty {
