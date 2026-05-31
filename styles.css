@@ -801,7 +801,6 @@ textarea {
   gap: 10px;
   overflow: auto;
   flex: 1;
-  min-width: 0;
 }
 
 .history-empty {
@@ -840,21 +839,6 @@ textarea {
   font-weight: 900;
 }
 
-.history-record-card {
-  position: relative;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #fffdf9;
-  touch-action: pan-y;
-  transition: transform 180ms ease;
-  z-index: 1;
-  flex-shrink: 0;
-}
-
-.history-record-card.is-dragging {
-  transition: none;
-}
 
 #dayModal .prompt-card {
   max-height: 70vh;
@@ -881,21 +865,6 @@ textarea {
   display: none;
 }
 
-.day-record-card {
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #fffdf9;
-  touch-action: pan-y;
-  transition: transform 180ms ease;
-  z-index: 1;
-  position: relative;
-  flex-shrink: 0;
-}
-
-.day-record-card.is-dragging {
-  transition: none;
-}
 
 .day-shell {
   position: relative;
@@ -957,29 +926,6 @@ textarea {
   opacity: 1;
 }
 
-.day-record-card p {
-  margin-top: 8px;
-  color: var(--muted);
-  line-height: 1.45;
-}
-
-.day-record-card small,
-.day-record-card em {
-  display: block;
-  margin-top: 8px;
-  color: var(--muted);
-  font-size: 0.86rem;
-  line-height: 1.45;
-}
-
-.day-record-card small {
-  color: var(--clay);
-  font-weight: 800;
-}
-
-.day-record-card em {
-  font-style: normal;
-}
 
 .splash {
   position: fixed;

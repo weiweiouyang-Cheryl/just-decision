@@ -172,7 +172,7 @@ function openDayModal(dateStr) {
         return (
           '<article class="record-shell day-shell" data-record-id="' + record.id + '">' +
           '<button class="delete-action" type="button" aria-label="删除">删除</button>' +
-          '<div class="record-card day-record-card">' +
+          '<div class="record-card">' +
           "<div class='day-record-head'>" +
           miniDiceHtml(record.value) +
           "<div><span>" +
@@ -200,7 +200,7 @@ function openDayModal(dateStr) {
 
 function bindDayGestures() {
   els.dayModalList.querySelectorAll(".day-shell").forEach(function (shell) {
-    var card = shell.querySelector(".day-record-card");
+    var card = shell.querySelector(".record-card");
     var deleteBtn = shell.querySelector(".delete-action");
     var startX = 0;
     var currentX = 0;
@@ -659,7 +659,7 @@ function renderHistory() {
         record.id +
         '">' +
         '<button class="history-restore" type="button" aria-label="复原这条记录">复原</button>' +
-        '<div class="record-card history-record-card">' +
+        '<div class="record-card">' +
         "<div><strong>" +
         record.value +
         "</strong><span>" +
@@ -685,7 +685,7 @@ function renderHistory() {
 
 function bindHistoryGestures() {
   els.historyList.querySelectorAll(".history-shell").forEach(function (shell) {
-    var card = shell.querySelector(".history-record-card");
+    var card = shell.querySelector(".record-card");
     var restoreBtn = shell.querySelector(".history-restore");
     var deleteBtn = shell.querySelector(".history-delete");
     var startX = 0;
